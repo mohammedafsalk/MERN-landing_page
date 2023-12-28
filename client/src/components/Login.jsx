@@ -1,15 +1,27 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { userCheck, userLogin } from "../services/userSignup";
+import { useUser } from "../context/UserContext";
 
 export default function Login() {
+  const { setRefresh } = useUser();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const hasErrors = () => {
     return email.trim() === "" || password.trim() === "";
   };
-  const handleSubmit = () => {
-    console.log("Submit");
+  const handleSubmit = async () => {
+    let values = { email, password };
+    const { data } = await userLogin(values);
+
+    if (!data.error) {
+      localStorage.setItem("jwtToken", data.token);
+      setRefresh();
+    } else {
+      message.warning(data.message);
+    }
   };
 
   return (

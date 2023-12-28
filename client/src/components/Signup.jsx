@@ -1,8 +1,11 @@
 import React from "react";
 import useValidations from "../hooks/useValidations";
-import { Link } from "react-router-dom";
+import { message } from "antd";
+import { Link, useNavigate } from "react-router-dom";
+import { userSignup } from "../services/userSignup";
 
 export default function Signup() {
+  const navigate = useNavigate();
   const {
     name,
     setName,
@@ -21,8 +24,14 @@ export default function Signup() {
     hasErrors,
   } = useValidations();
 
-  const handleSubmit = () => {
-    console.log("Submit");
+  const handleSubmit = async () => {
+    let values = { email, password, mobileNumber, name };
+    const { data } = await userSignup(values);
+    if (!data.error) {
+      navigate("/login");
+    } else {
+      message.warning(data.message);
+    }
   };
 
   return (

@@ -1,6 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
+import { useUser } from "../context/UserContext";
 
 export default function Navbar() {
+  const { user, setRefresh } = useUser();
+
+  const HandleLogout = () => {
+    localStorage.removeItem("jwtToken");
+    setRefresh();
+  };
+
   return (
     <section className="p-4 bg-transparent flex justify-between align-middle">
       <div className="">
@@ -13,9 +21,13 @@ export default function Navbar() {
       <div className="">
         <h1 className="text-xl text-blue-700 font-extrabold">Landings</h1>
       </div>
-      <div className="flex justify-end">
-        <button className="border bg-blue-700 text-white font-medium rounded-md  w-44">
-          Buy Now
+      <div className="flex justify-end gap-5 items-center">
+        {user && <p className="font-medium">Welcome {user.name}</p>}
+        <button
+          onClick={HandleLogout}
+          className="border bg-blue-700 text-white font-medium rounded-md px-1"
+        >
+          Logout
         </button>
       </div>
     </section>
