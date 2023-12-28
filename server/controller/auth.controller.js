@@ -30,10 +30,10 @@ export async function userLogin(req, res) {
   try {
     const { email, password } = req.body;
     const user = await UserModel.findOne({ email });
-    if (!user) return res.json({ err: true, message: "User Not Found" });
+    if (!user) return res.json({ error: true, message: "User Not Found" });
     const valid = bcrypt.compareSync(password, user.password);
     if (!valid)
-      return res.json({ err: true, message: "Email or Password is Wrong" });
+      return res.json({ error: true, message: "Email or Password is Wrong" });
     const token = jwt.sign(
       {
         id: user._id,
@@ -45,7 +45,7 @@ export async function userLogin(req, res) {
     return res.json({ error: false, token });
   } catch (error) {
     console.log(error.message);
-    res.json({ error: error, err: true, message: "Something bad happend!" });
+    res.json({ error: true,  message: "Something bad happend!" });
   }
 }
 
